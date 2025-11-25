@@ -14,4 +14,7 @@ Thuộc tính: ghi lại công việc sinh viên đăng ký lớp học cụ th�
 - Sinh viên - Lớp học phần: 1sv có thể dky nhiều lớp học phần và ngược lại (n-n)
 - Môn học - Lớp học phần: 1 môn học có thể mở nhiều lớp học phần nhưng 1 lớp học phần chỉ có 1 môn học (1-n)
 - Giảng viên - Lớp học phần: 1 gv dạy nhiều lớp học phần nhưng 1 lớp học phần chỉ có 1gv phụ trách(1-n)
+- Giảng viên - Môn học: 1 gv dạy nhiều môn học và ngược lại 1 môn học có thể có nhiều giáo viên phụ trách(n-n)
+
 12:34 PM 11/25/20259
+
