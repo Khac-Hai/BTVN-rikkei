@@ -1,3 +1,4 @@
+create database EcommerceDB;
 create schema shop;
 set search_path to shop;
 
@@ -48,4 +49,5 @@ create table Payments(
     payment_date date not null ,
     method varchar(30) check ( method IN ('Credit Card','Momo','Bank Transfer','Cash')),
     constraint fk_order foreign key (order_id) references Orders(order_id)
+
 );
