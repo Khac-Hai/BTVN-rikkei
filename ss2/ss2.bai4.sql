@@ -19,7 +19,7 @@ create table Courses(
                         course_id serial primary key ,
                         course_name varchar(100) not null ,
                         instructor_id int not null ,
-                        constraint pk_instructor foreign key (instructor_id) references Instructors(instructor_id)
+                        constraint fk_instructor foreign key (instructor_id) references Instructors(instructor_id)
 );
 
 create table Enrollments(
@@ -27,8 +27,8 @@ create table Enrollments(
                             enroll_date date not null ,
                             student_id int not null ,
                             course_id int not null ,
-                            constraint pk_student foreign key (student_id) references Students(student_id),
-                            constraint pk_course foreign key (course_id) references Courses(course_id)
+                            constraint fk_student foreign key (student_id) references Students(student_id),
+                            constraint fk_course foreign key (course_id) references Courses(course_id)
 );
 
 create table Assignments(
@@ -36,7 +36,7 @@ create table Assignments(
                             title varchar(100) not null ,
                             due_date date not null ,
                             course_id int not null ,
-                            constraint pk_course foreign key (course_id) references Courses(course_id)
+                            constraint fk_course foreign key (course_id) references Courses(course_id)
 );
 
 create table Submissions(
@@ -45,6 +45,7 @@ create table Submissions(
                             grade NUMERIC(10,2) CHECK (grade >= 0 AND grade <= 100),
                             assignment_id int not null ,
                             student_id int not null ,
-                            constraint pk_assignment foreign key (assignment_id) references Assignments(assignment_id),
-                            constraint pk_student foreign key (student_id) references Students(student_id)
+                            constraint fk_assignment foreign key (assignment_id) references Assignments(assignment_id),
+                            constraint fk_student foreign key (student_id) references Students(student_id)
+
 );
