@@ -13,7 +13,7 @@ create table Rooms(
     room_number varchar(10) not null unique ,
     room_type_id int,
     status varchar(20) check ( status in ('Available','Occupied','Maintenance')),
-    constraint pk_room_types foreign key (room_type_id) references RoomTypes(room_type_id)
+    constraint fk_room_types foreign key (room_type_id) references RoomTypes(room_type_id)
 );
 
 create table Customers(
@@ -30,8 +30,8 @@ create table Bookings(
     check_in date not null ,
     check_out date not null ,
     status varchar(20) check ( status in ('Pending','Confirmed','Cancelled')),
-    constraint pk_room foreign key (room_id) references Rooms(room_id),
-    constraint pk_customer foreign key (customer_id) references  Customers(customer_id)
+    constraint fk_room foreign key (room_id) references Rooms(room_id),
+    constraint fk_customer foreign key (customer_id) references  Customers(customer_id)
 );
 
 create table Payments(
@@ -40,5 +40,6 @@ create table Payments(
     amount numeric(10,2) check ( amount >= 0 ),
     payment_date date not null ,
     method varchar(20) check ( method IN ('Credit Card','Cash','Bank Transfer') ),
-    constraint pk_booking foreign key (booking_id) references Bookings(booking_id)
+    constraint fk_booking foreign key (booking_id) references Bookings(booking_id)
+
 );
