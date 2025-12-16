@@ -3,8 +3,7 @@ CREATE TABLE employees (
                            name VARCHAR(100) NOT NULL,
                            department VARCHAR(50),
                            salary NUMERIC(10,2),
-                           bonus NUMERIC(10,2) DEFAULT 0,
-                            satatus varchar(20)
+                           bonus NUMERIC(10,2) DEFAULT 0
 );
 INSERT INTO employees (name, department, salary) VALUES
                                                      ('Nguyen Van A', 'HR', 4000),
@@ -34,7 +33,6 @@ BEGIN
         elsif v_salary >10000 then
             p_status := 'Senior';
         end if;
-        update employees set satatus = p_status
-        where id = p_emp_id;
 END;
+
 $$;
