@@ -1,211 +1,180 @@
-CREATE DATABASE SalesDB;
--- Bảng khách hàng
-CREATE TABLE Customers (
-                           CustomerID serial PRIMARY KEY ,
-                           CustomerName VARCHAR(100),
-                           City VARCHAR(50),
-                           Country VARCHAR(50)
+-- Tạo bảng Book(sách)
+CREATE TABLE Book (
+                      book_id VARCHAR(10) PRIMARY KEY,
+                      book_title VARCHAR(150) NOT NULL,
+                      book_price DECIMAL(10,2) NOT NULL,
+                      book_stock INT NOT NULL
 );
 
--- Bảng nhân viên
-CREATE TABLE Employees (
-                           EmployeeID serial PRIMARY KEY ,
-                           EmployeeName VARCHAR(100),
-                           Department VARCHAR(50)
+-- Tạo bảng Reader(người đọc)
+CREATE TABLE Reader (
+                        reader_id VARCHAR(10) PRIMARY KEY,
+                        reader_name VARCHAR(100) NOT NULL,
+                        reader_email VARCHAR(100),
+                        reader_phone VARCHAR(20),
+                        reader_address VARCHAR(255)
 );
 
--- Bảng sản phẩm
-CREATE TABLE Products (
-                          ProductID serial PRIMARY KEY ,
-                          ProductName VARCHAR(100),
-                          Category VARCHAR(50),
-                          Price DECIMAL(10,2)
+-- Tạo bảng Borrow(mượn)
+CREATE TABLE Borrow (
+                        borrow_id VARCHAR(10) PRIMARY KEY,
+                        reader_id VARCHAR(10),
+                        borrow_date DATE NOT NULL,
+                        total_fee DECIMAL(10,2),
+                        FOREIGN KEY (reader_id) REFERENCES Reader(reader_id)
 );
 
--- Bảng đơn hàng
-CREATE TABLE Orders (
-                        OrderID serial PRIMARY KEY ,
-                        CustomerID INT,
-                        EmployeeID INT,
-                        OrderDate DATE,
-                        FOREIGN KEY (CustomerID) REFERENCES Customers(CustomerID),
-                        FOREIGN KEY (EmployeeID) REFERENCES Employees(EmployeeID)
+-- Tạo bảng BorrowDetails(chi tiết mượn)
+CREATE TABLE BorrowDetails (
+                               borrowdetail_id SERIAL PRIMARY KEY,
+                               borrow_id VARCHAR(10),
+                               book_id VARCHAR(10),
+                               quantity INT NOT NULL,
+                               fee DECIMAL(10,2) NOT NULL,
+                               FOREIGN KEY (borrow_id) REFERENCES Borrow(borrow_id),
+                               FOREIGN KEY (book_id) REFERENCES Book(book_id)
 );
+-- Book
+INSERT INTO Book VALUES
+                     ('B001', 'Database Systems', 300.0, 40),
+                     ('B002', 'Java Programming', 450.0, 60),
+                     ('B003', 'Python Basics', 350.0, 50),
+                     ('B004', 'Web Development', 500.0, 30),
+                     ('B005', 'Data Structures', 400.0, 45);
 
--- Bảng chi tiết đơn hàng
-CREATE TABLE OrderDetails (
-                              OrderDetailID serial PRIMARY KEY ,
-                              OrderID INT,
-                              ProductID INT,
-                              Quantity INT,
-                              FOREIGN KEY (OrderID) REFERENCES Orders(OrderID),
-                              FOREIGN KEY (ProductID) REFERENCES Products(ProductID)
-);
+-- Reader
+INSERT INTO Reader VALUES
+                       ('R001', 'Nguyen Van A', 'a@gmail.com', '0911111111', 'Hanoi'),
+                       ('R002', 'Tran Thi B', 'b@gmail.com', '0922222222', 'HCM'),
+                       ('R003', 'Le Van C', 'c@gmail.com', '0933333333', 'Da Nang'),
+                       ('R004', 'Pham Thi D', 'd@gmail.com', '0944444444', 'Hue'),
+                       ('R005', 'Hoang Van E', 'e@gmail.com', '0955555555', 'Hai Phong');
 
--- Dữ liệu mẫu
-INSERT INTO Customers (CustomerName, City, Country) VALUES
-                                                        ('Nguyen Van A','Hanoi','Vietnam'),
-                                                        ('Tran Thi B','HCM','Vietnam'),
-                                                        ('Le Van C','Da Nang','Vietnam'),
-                                                        ('Pham Thi D','Hue','Vietnam'),
-                                                        ('Hoang Van E','Hai Phong','Vietnam'),
-                                                        ('Do Thi F','Can Tho','Vietnam'),
-                                                        ('Nguyen Van G','Hanoi','Vietnam'),
-                                                        ('Tran Van H','HCM','Vietnam'),
-                                                        ('Le Thi I','Da Nang','Vietnam'),
-                                                        ('Pham Van J','Hue','Vietnam');
+-- Borrow
+INSERT INTO Borrow VALUES
+                       ('BR001', 'R001', '2025-04-01', 900),
+                       ('BR002', 'R002', '2025-04-02', 700),
+                       ('BR003', 'R003', '2025-04-03', 1400),
+                       ('BR004', 'R004', '2025-04-04', 500),
+                       ('BR005', 'R005', '2025-04-05', 300);
 
-INSERT INTO Employees (EmployeeName, Department) VALUES
-                                                     ('Nguyen Van K','Sales'),
-                                                     ('Tran Van L','Support'),
-                                                     ('Le Thi M','Sales'),
-                                                     ('Pham Van N','IT'),
-                                                     ('Hoang Thi O','Sales');
+-- BorrowDetails
+INSERT INTO BorrowDetails (borrow_id, book_id, quantity, fee)
+VALUES
+    ('BR001', 'B001', 2, 300),
+    ('BR001', 'B002', 1, 450),
+    ('BR002', 'B003', 2, 350),
+    ('BR003', 'B004', 2, 500),
+    ('BR004', 'B005', 1, 400);
 
-INSERT INTO Products (ProductName, Category, Price) VALUES
-                                                        ('Laptop','Electronics',1200),
-                                                        ('Phone','Electronics',800),
-                                                        ('Tablet','Electronics',600),
-                                                        ('Desktop','Electronics',1500),
-                                                        ('Monitor','Electronics',300),
-                                                        ('Desk','Furniture',200),
-                                                        ('Chair','Furniture',100),
-                                                        ('Bookshelf','Furniture',250),
-                                                        ('Printer','Office',400),
-                                                        ('Scanner','Office',350);
-
-INSERT INTO Orders (CustomerID, EmployeeID, OrderDate) VALUES
-                                                           (1,1,'2025-11-01'),
-                                                           (2,1,'2025-11-02'),
-                                                           (3,2,'2025-11-03'),
-                                                           (4,3,'2025-11-04'),
-                                                           (5,4,'2025-11-05'),
-                                                           (6,5,'2025-11-06'),
-                                                           (7,1,'2025-11-07'),
-                                                           (8,2,'2025-11-08'),
-                                                           (9,3,'2025-11-09'),
-                                                           (10,4,'2025-11-10');
-
-INSERT INTO OrderDetails (OrderID, ProductID, Quantity) VALUES
-                                                            (1,1,2),   -- Laptop
-                                                            (1,2,1),   -- Phone
-                                                            (2,3,3),   -- Tablet
-                                                            (2,6,2),   -- Desk
-                                                            (3,4,1),   -- Desktop
-                                                            (3,7,5),   -- Chair
-                                                            (4,5,2),   -- Monitor
-                                                            (4,8,1),   -- Bookshelf
-                                                            (5,9,4),   -- Printer
-                                                            (5,10,2),  -- Scanner
-                                                            (6,2,5),   -- Phone
-                                                            (6,3,2),   -- Tablet
-                                                            (7,1,1),   -- Laptop
-                                                            (7,7,10),  -- Chair
-                                                            (8,4,2),   -- Desktop
-                                                            (8,6,3),   -- Desk
-                                                            (9,5,4),   -- Monitor
-                                                            (9,9,1),   -- Printer
-                                                            (10,10,5), -- Scanner
-                                                            (10,8,2);  -- Bookshelf
-
---1. Liệt kê tất cả đơn hàng cùng tên khách hàng.
-    select o.*, c.CustomerName
-    from Customers c join Orders o
-    on c.CustomerID = o.CustomerID;
---. Liệt kê đơn hàng kèm tên nhân viên xử lý.
-    select o.*, e.EmployeeName
-    from employees e join Orders o
-    on e.EmployeeID = o.EmployeeID;
---3. Liệt kê chi tiết đơn hàng (OrderID, ProductName, Quantity).
-    select od.OrderID, p.ProductName, od.Quantity
-    from Products p join OrderDetails od
-    on p.ProductID = od.ProductID;
---4. Liệt kê khách hàng và sản phẩm họ đã mua.
-select c.*, p.ProductName, od.Quantity, p.price
-from Customers c join Orders o on c.CustomerID = o.CustomerID
-join OrderDetails od on o.OrderID = od.OrderID
-join Products p on od.ProductID = p.ProductID;
---5. Liệt kê nhân viên và khách hàng mà họ phục vụ.
---6. Liệt kê khách hàng ở Hà Nội và sản phẩm họ mua.
-    select c.* ,p.ProductName, OD.Quantity, P.price
-    from Customers c join Orders o on c.CustomerID = o.CustomerID
-    join OrderDetails OD on o.OrderID = OD.OrderID
-    join Products P on OD.ProductID = P.ProductID
-    where c.City = 'Hanoi';
---7. Liệt kê tất cả đơn hàng cùng tên khách hàng và nhân viên.
---8. Liệt kê sản phẩm và số lượng bán ra trong từng đơn hàng.
---9. Liệt kê khách hàng và số lượng sản phẩm họ đã mua.
-    select c.*, OD.Quantity
-    from Customers c join Orders o on c.CustomerID = o.CustomerID
-    join OrderDetails OD on o.OrderID = OD.OrderID;
---10. Liệt kê nhân viên và tổng số đơn hàng họ xử lý.
-select e.*, count(o.OrderID)
-    from employees e join Orders O on e.EmployeeID = O.EmployeeID
-group by e.EmployeeID;
-
-
---GROUP BY & HAVING
---1. Tính tổng số lượng sản phẩm bán ra theo từng sản phẩm.
-SELECT p.ProductName, SUM(od.Quantity)
-FROM OrderDetails od left join  Products p ON od.ProductID = p.ProductID
-GROUP BY p.ProductID;
---2. Tính tổng doanh thu theo từng sản phẩm.
-SELECT p.ProductName, SUM(od.Quantity * p.Price)
-FROM OrderDetails od left join Products p ON od.ProductID = p.ProductID
-GROUP BY p.ProductID;
---3. Tính tổng doanh thu theo từng khách hàng.
-select p.productname, c.CustomerName,od.Quantity, sum(OD.quantity*p.Price)
-from Customers c join Orders o on c.CustomerID = o.CustomerID
-join OrderDetails OD on o.OrderID = OD.OrderID
-join Products P on OD.ProductID = P.ProductID
-group by p.productname, c.CustomerName, od.Quantity;
---4. Tính tổng doanh thu theo từng nhân viên.
-select e.EmployeeName,P.ProductName,od.Quantity, sum(OD.Quantity*P.price)
-from employees e join Orders O on e.EmployeeID = O.EmployeeID
-join OrderDetails OD on O.OrderID = OD.OrderID
-join Products P on OD.ProductID = P.ProductID
-group by e.EmployeeName,P.ProductName, OD.Quantity;
---5. Liệt kê sản phẩm có doanh thu > 1000.
-SELECT p.ProductName, SUM(od.Quantity * p.Price)
-FROM OrderDetails od JOIN Products p ON od.ProductID = p.ProductID
-GROUP BY p.ProductName
-having SUM(od.Quantity * p.Price) > 1000;
---6. Liệt kê khách hàng có tổng số lượng mua > 5.
-SELECT c.CustomerName, SUM(od.Quantity)
-FROM Orders o JOIN Customers c ON o.CustomerID = c.CustomerID
-JOIN OrderDetails od ON o.OrderID = od.OrderID
-GROUP BY c.CustomerName
-HAVING SUM(od.Quantity) > 5;
---7. Liệt kê nhân viên có doanh thu trung bình > 500.
-select e.EmployeeName, avg(OD.Quantity*P.price)
-from employees e join Orders O on e.EmployeeID = O.EmployeeID
-                 join OrderDetails OD on O.OrderID = OD.OrderID
-                 join Products P on OD.ProductID = P.ProductID
-group by e.EmployeeID
-having avg(OD.Quantity*P.price) >500 ;
---8. Liệt kê thành phố có nhiều khách hàng nhất.
-SELECT c.City, COUNT(*) AS CustomerCount
-FROM Customers c
-GROUP BY c.City
-ORDER BY CustomerCount DESC
-LIMIT 1;
---9. Liệt kê loại sản phẩm có tổng doanh thu cao nhất.
---b1: lay danh thu cao nhat (MAX)
---b2: lay duoc nhung san oham co danh thu = danh thu cao nhat
-SELECT p.ProductID, p.ProductName, SUM(od.Quantity * p.Price)
-FROM OrderDetails od left join Products p ON od.ProductID = p.ProductID
-GROUP BY p.ProductID
-order by SUM(od.Quantity * p.Price) desc
-LIMIT 1;
-
-SELECT p.*, SUM(od.Quantity * p.Price)
-FROM OrderDetails od left join Products p ON od.ProductID = p.ProductID
-GROUP BY p.ProductID
-having SUM(od.Quantity * p.Price) = (SELECT  SUM(od.Quantity * p.Price)
-                                     FROM OrderDetails od left join Products p ON od.ProductID = p.ProductID
-                                     GROUP BY p.ProductID
-                                     order by SUM(od.Quantity * p.Price) desc
-                                     LIMIT 1)
-;
-
---10. Liệt kê khách hàng có nhiều đơn hàng nhất.
+-- 3. Cập nhật dữ liệu (6 điểm)
+-- Viết câu lệnh UPDATE để tăng total_fee thêm 10% cho tất cả các phiếu mượn.
+update Borrow set total_fee = total_fee * 1.1;
+--4. Xóa dữ liệu (6 điểm)
+--Viết câu lệnh DELETE để xóa các phiếu mượn có total_fee < 400.
+delete from Borrow
+where total_fee < 400;
+--PHẦN 2: Truy vấn dữ liệu
+--Lấy thông tin độc giả gồm: mã độc giả, họ tên, email, số điện thoại, địa chỉ — sắp xếp theo họ tên tăng dần.
+select reader_id,reader_name,reader_email,reader_phone,reader_address
+from Reader
+order by reader_name asc ;
+--Lấy thông tin sách gồm: mã sách, tên sách, giá sách, số lượng tồn kho — sắp xếp theo giá giảm dần.
+select book_id,book_title,book_stock,book_price
+from Book
+order by book_price desc;
+--Lấy danh sách các phiếu mượn gồm: mã phiếu mượn, mã độc giả, ngày mượn, tổng phí — sắp xếp theo ngày mượn giảm dần.
+select borrow_id,reader_id,borrow_date,total_fee
+from Borrow
+order by borrow_date desc ;
+--Lấy danh sách độc giả và tổng phí đã chi, gồm: mã độc giả, họ tên, tổng phí — sắp xếp theo tổng phí giảm dần.
+select r.reader_id, r.reader_name,sum(B.total_fee)
+from Reader r join Borrow B on r.reader_id = B.reader_id
+group by  r.reader_id, r.reader_name
+order by sum(B.total_fee) desc ;
+--Lấy thông tin các phiếu mượn từ vị trí thứ 3 đến thứ 5 trong bảng Borrow khi sắp xếp theo mã phiếu mượn.
+select borrow_id
+from Borrow
+order by borrow_id
+offset 2
+limit 3;
+--Lấy danh sách độc giả đã mượn ít nhất 2 cuốn sách khác nhau và có tổng phí > 800, gồm:
+-- Mã độc giả
+--Họ tên
+--Số lượng sách đã mượn
+select r.reader_id,r.reader_name,  count(distinct BD.book_id)
+from Reader r join Borrow B on r.reader_id = B.reader_id
+join BorrowDetails BD on B.borrow_id = BD.borrow_id
+group by r.reader_id,r.reader_name
+having sum(b.total_fee)>800 and count(distinct BD.book_id) >=2;
+--PHẦN 3: Tạo View
+--Tạo view hiển thị thông tin các sách đã được mượn với điều kiện ngày mượn < '2025-04-10', gồm:
+--Mã sách
+--Tên sách
+--Mã phiếu mượn
+--Mã độc giả
+--Ngày mượn
+create view v_thongtin as
+select b.book_id,b.book_title, bo.borrow_id,bo.reader_id,bo.borrow_date
+from Book b join BorrowDetails BD on b.book_id = BD.book_id
+join Borrow bo on bo.borrow_id=BD.borrow_id
+where bo.borrow_date <'2025-04-10';
+--Tạo view hiển thị thông tin độc giả và các phiếu mượn có:
+--Tổng phí > 600
+--Tổng số lượng sách mượn > 1
+--Hiển thị:
+--Mã độc giả
+--Họ tên độc giả
+--Mã phiếu mượn
+--Tổng phí
+create view view_read_borrow as
+select r.reader_id,r.reader_name,B.borrow_id,B.total_fee
+from Reader r join Borrow B on r.reader_id = B.reader_id
+join BorrowDetails BD on B.borrow_id = BD.borrow_id
+group by r.reader_id,r.reader_name,B.borrow_id,B.total_fee
+having count(distinct BD.quantity) >1 and B.total_fee > 600;
+--PHẦN 4: Tạo Trigger
+-- Tạo trigger check_insert_borrow: Khi INSERT vào bảng Borrow.Nếu total_fee < 200 → thông báo lỗi:"Tổng phí mượn không được nhỏ hơn 200".Hủy thao tác INSERT.
+create function  check_insert_borrow()
+returns trigger as $$
+begin
+    if new.total_fee < 200 then
+    raise exception 'Tổng phí mượn không được nhỏ hơn 200';
+    end if;
+    return new;
+end;
+$$ language plpgsql;
+create trigger check_insert_borrow
+before insert on Borrow
+for each row
+execute function check_insert_borrow();
+--PHẦN 5: Tạo Stored Procedure
+--Tạo Stored Procedure add_reader để thêm mới một độc giả với đầy đủ thông tin.
+create procedure add_reader(
+    p_reader_id VARCHAR,
+    p_reader_name VARCHAR,
+    p_reader_email VARCHAR,
+    p_reader_phone VARCHAR,
+    p_reader_address VARCHAR
+)
+language plpgsql
+as $$
+begin
+    insert into Reader(reader_id, reader_name, reader_email, reader_phone, reader_address)
+    values ( p_reader_id,p_reader_name,p_reader_email,p_reader_phone,p_reader_address);
+end;
+$$;
+--Tạo Stored Procedure add_borrow để thêm một phiếu mượn mới.
+--Tham số đầu vào: p_reader_id, p_borrow_date, p_total_fee
+create procedure add_borrow(
+    p_reader_id varchar,
+    p_borrow_date date,
+    p_total_fee decimal
+)
+language plpgsql
+as $$
+begin
+    insert into Borrow(reader_id, borrow_date, total_fee)
+    values ( p_reader_id,p_borrow_date, p_total_fee);
+end;
+$$;
